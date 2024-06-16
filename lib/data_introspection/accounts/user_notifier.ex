@@ -1,4 +1,5 @@
 defmodule DataIntrospection.Accounts.UserNotifier do
+  @moduledoc false
   import Swoosh.Email
 
   alias DataIntrospection.Mailer

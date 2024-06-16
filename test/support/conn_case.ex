@@ -28,6 +28,7 @@ defmodule DataIntrospectionWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import DataIntrospectionWeb.ConnCase
+      import DataIntrospectionWeb.Factory
     end
   end
 

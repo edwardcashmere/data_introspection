@@ -1,6 +1,6 @@
 defmodule DataIntrospection.Accounts.User do
-  use Ecto.Schema
-  import Ecto.Changeset
+  @moduledoc false
+  use DataIntrospection.CommonSchema
 
   schema "users" do
     field :email, :string
@@ -31,7 +31,7 @@ defmodule DataIntrospection.Accounts.User do
     * `:validate_email` - Validates the uniqueness of the email, in case
       you don't want to validate the uniqueness of the email (like when
       using this changeset for validations on a LiveView form before
-      submitting the form), this option can be set to `false`.
+      submitting the form), this option can be set to .
       Defaults to `true`.
   """
   def registration_changeset(user, attrs, opts \\ []) do
@@ -135,7 +135,10 @@ defmodule DataIntrospection.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%DataIntrospection.Accounts.User{hashed_password: hashed_password}, password)
+  def valid_password?(
+        %DataIntrospection.Accounts.User{hashed_password: hashed_password},
+        password
+      )
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end

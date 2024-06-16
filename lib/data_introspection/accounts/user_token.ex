@@ -1,6 +1,6 @@
 defmodule DataIntrospection.Accounts.UserToken do
-  use Ecto.Schema
-  import Ecto.Query
+  @moduledoc false
+  use DataIntrospection.CommonSchema
   alias DataIntrospection.Accounts.UserToken
 
   @hash_algorithm :sha256

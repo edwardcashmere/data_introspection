@@ -10,7 +10,8 @@ defmodule DataIntrospection.Application do
     children = [
       DataIntrospectionWeb.Telemetry,
       DataIntrospection.Repo,
-      {DNSCluster, query: Application.get_env(:data_introspection, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:data_introspection, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: DataIntrospection.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: DataIntrospection.Finch},

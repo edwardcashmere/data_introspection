@@ -12,7 +12,7 @@ defmodule DataIntrospection.AccountsTest do
     end
 
     test "returns the user if the email exists" do
-      %{id: id} = user = user_fixture()
+      %{id: id} = user = insert(:user)
       assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
     end
   end
@@ -38,7 +38,7 @@ defmodule DataIntrospection.AccountsTest do
   describe "get_user!/1" do
     test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        Accounts.get_user!(-1)
+        Accounts.get_user!(Ecto.UUID.generate())
       end
     end
 

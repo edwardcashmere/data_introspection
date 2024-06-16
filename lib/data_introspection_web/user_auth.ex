@@ -1,4 +1,5 @@
 defmodule DataIntrospectionWeb.UserAuth do
+  @moduledoc false
   use DataIntrospectionWeb, :verified_routes
 
   import Plug.Conn

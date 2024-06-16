@@ -22,6 +22,13 @@ config :data_introspection, DataIntrospectionWeb.Endpoint,
   pubsub_server: DataIntrospection.PubSub,
   live_view: [signing_salt: "xLuCL8Vb"]
 
+config :data_introspection, DataIntrospection.Repo,
+  migration_primary_key: [name: :uuid, type: :binary_id]
+
+config :data_introspection, DataIntrospection.Repo,
+  migration_primary_key: false,
+  prepare: :unnamed
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
