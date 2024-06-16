@@ -2,10 +2,20 @@ defmodule DataIntrospectionWeb.Factory do
   @moduledoc false
   use ExMachina.Ecto, repo: DataIntrospection.Repo
 
+  @spec user_factory :: DataIntrospection.Accounts.User.t()
   def user_factory do
     %DataIntrospection.Accounts.User{
       email: build(:email),
       hashed_password: build(:hashed_password)
+    }
+  end
+
+  @spec plot_factory :: DataIntrospection.Plots.Plot.t()
+  def plot_factory do
+    %DataIntrospection.Plots.Plot{
+      title: sequence(:title, &"Plot-#{&1}"),
+      dataset: sequence(:dataset, &"Dataset-#{&1}"),
+      expression: sequence(:expression, &"Expression-#{&1}")
     }
   end
 

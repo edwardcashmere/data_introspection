@@ -1,4 +1,5 @@
 defmodule DataIntrospectionWeb.DashboardLive.IndexTest do
+  @moduledoc false
   use DataIntrospectionWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest

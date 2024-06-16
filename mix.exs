@@ -37,6 +37,7 @@ defmodule DataIntrospection.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
       {:ex_machina, "~> 2.7.0"},
+      {:live_select, "~> 1.0"},
       {:ex_check, "~> 0.14.0", only: [:dev], runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.0"},
