@@ -29,6 +29,7 @@ defmodule DataIntrospectionWeb.ConnCase do
       import Phoenix.ConnTest
       import DataIntrospectionWeb.ConnCase
       import DataIntrospectionWeb.Factory
+      import DataIntrospectionWeb.LiveBehaviourHelpers
     end
   end
 
@@ -46,7 +47,7 @@ defmodule DataIntrospectionWeb.ConnCase do
   test context.
   """
   def register_and_log_in_user(%{conn: conn}) do
-    user = DataIntrospection.AccountsFixtures.user_fixture()
+    user = DataIntrospectionWeb.Factory.insert(:user)
     %{conn: log_in_user(conn, user), user: user}
   end
 

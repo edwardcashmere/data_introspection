@@ -1,8 +1,8 @@
 defmodule DataIntrospectionWeb.UserLoginLiveTest do
+  @moduledoc false
   use DataIntrospectionWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import DataIntrospection.AccountsFixtures
 
   describe "Log in page" do
     test "renders log in page", %{conn: conn} do
@@ -16,7 +16,7 @@ defmodule DataIntrospectionWeb.UserLoginLiveTest do
     test "redirects if already logged in", %{conn: conn} do
       result =
         conn
-        |> log_in_user(user_fixture())
+        |> log_in_user(insert(:user))
         |> live(~p"/users/log_in")
         |> follow_redirect(conn, "/")
 
@@ -26,13 +26,13 @@ defmodule DataIntrospectionWeb.UserLoginLiveTest do
 
   describe "user login" do
     test "redirects if user login with valid credentials", %{conn: conn} do
-      password = "123456789abcd"
-      user = user_fixture(%{password: password})
-
+      user = insert(:user)
       {:ok, lv, _html} = live(conn, ~p"/users/log_in")
 
       form =
-        form(lv, "#login_form", user: %{email: user.email, password: password, remember_me: true})
+        form(lv, "#login_form",
+          user: %{email: user.email, password: build(:password), remember_me: true}
+        )
 
       conn = submit_form(form, conn)
 

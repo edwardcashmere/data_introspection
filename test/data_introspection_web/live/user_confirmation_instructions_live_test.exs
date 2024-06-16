@@ -2,13 +2,12 @@ defmodule DataIntrospectionWeb.UserConfirmationInstructionsLiveTest do
   use DataIntrospectionWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import DataIntrospection.AccountsFixtures
 
   alias DataIntrospection.Accounts
   alias DataIntrospection.Repo
 
   setup do
-    %{user: user_fixture()}
+    %{user: insert(:user)}
   end
 
   describe "Resend confirmation" do

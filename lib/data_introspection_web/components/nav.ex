@@ -18,8 +18,9 @@ defmodule DataIntrospectionWeb.Nav do
       <.nav_item
         name="Your plots"
         icon="hero-squares-plus-solid"
-        href={~p"/plots/user/#{@current_user}"}
+        href={~p"/plots/private/#{@current_user}"}
         tab={@tab}
+        data_role="private-plots-link"
         tab_name={:self}
       />
       <.nav_item
@@ -27,6 +28,7 @@ defmodule DataIntrospectionWeb.Nav do
         icon="hero-chart-bar-square-solid"
         href={~p"/plots/shared/#{@current_user}"}
         tab={@tab}
+        data_role="shared-plots-link"
         tab_name={:shared}
       />
     </aside>
@@ -38,6 +40,7 @@ defmodule DataIntrospectionWeb.Nav do
   attr(:icon, :string, required: true)
   attr(:href, :string, required: true)
   attr(:tab_name, :atom, required: true)
+  attr(:data_role, :string, required: true)
   @spec nav_item(assigns :: map()) :: Phoenix.LiveView.Rendered.t()
   def nav_item(assigns) do
     assigns =
@@ -49,6 +52,7 @@ defmodule DataIntrospectionWeb.Nav do
     <.link
       class={"flex space-x-2 items-center w-3/4 rounded-md my-4 mx-2 p-1 hover:bg-slate-500 #{@base_class}"}
       href={@href}
+      data-role={@data_role}
     >
       <.icon name={@icon} class="h-6  w-6" />
       <span class="ml-2"><%= @name %></span>

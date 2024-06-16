@@ -101,8 +101,9 @@ defmodule DataIntrospectionWeb.Router do
         {DataIntrospectionWeb.UserAuth, :ensure_authenticated},
         DataIntrospectionWeb.Hook.Nav
       ] do
-      live "/user/:id", PlotsLive.Index, :self
+      live "/private/:id", PlotsLive.Index, :self
       live "/shared/:id", PlotsLive.Index, :shared
+      # live "/public/:id", PlotsLive.Index, :shared
     end
   end
 end
