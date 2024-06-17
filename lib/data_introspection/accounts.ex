@@ -7,7 +7,7 @@ defmodule DataIntrospection.Accounts do
   alias DataIntrospection.Repo
 
   alias DataIntrospection.AccessControl
-  alias DataIntrospection.Accounts.{User, UserToken, UserNotifier}
+  alias DataIntrospection.Accounts.{User, UserNotifier, UserToken}
 
   @doc false
   @spec list_users(User.t()) :: [User.t()]
@@ -338,18 +338,16 @@ defmodule DataIntrospection.Accounts do
     end
   end
 
+  @spec get_all_plot_collaborators(DataIntrospection.Plots.Plot.t(), User.t()) :: [User.t()]
   def get_all_plot_collaborators(plot, current_user) do
     user_ids =
       plot
       |> AccessControl.filter_subject_based_on_permissions()
       |> Enum.reject(&(&1 == current_user.id))
 
-    IO.inspect(user_ids, label: "user_ids")
-
     User
     |> from(as: :users)
     |> where([u], u.id in ^user_ids)
-    |> select([u], u.email)
     |> Repo.all()
   end
 

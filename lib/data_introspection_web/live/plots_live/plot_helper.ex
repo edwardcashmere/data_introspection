@@ -110,7 +110,7 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
 
   @spec sanitize_data_and_perform_operation(list({String.t(), String.t()}), String.t()) ::
           list()
-  # credo:disable-for-next-line Credo.Check.Refactor.ABCSize
+  # credo:disable-for-lines:2
   def sanitize_data_and_perform_operation(data, operator) do
     data
     |> Enum.map(fn

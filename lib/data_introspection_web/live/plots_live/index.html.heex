@@ -25,7 +25,7 @@
       <div class="flex space-x-2">
         <p>Shared with:</p>
         <ul class="flex space-x-2">
-          <li :for={user <- Accounts.get_all_plot_collaborators(plot, @current_user)}>
+          <li :for={user <- get_collaborators(plot, @current_user)}>
             <%= user %>,
           </li>
         </ul>

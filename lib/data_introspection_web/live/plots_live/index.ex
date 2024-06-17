@@ -127,4 +127,8 @@ defmodule DataIntrospectionWeb.PlotsLive.Index do
       [updated_plot | acc]
     end)
   end
+
+  defp get_collaborators(plot, user) do
+    plot |> Accounts.get_all_plot_collaborators(user) |> Enum.map(& &1.email)
+  end
 end

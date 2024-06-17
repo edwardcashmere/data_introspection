@@ -79,7 +79,7 @@ defmodule DataIntrospection.AccessControl do
     |> Enum.any?()
   end
 
-  @spec filter_subject_based_on_permissions(Ecto.UUID.t()) :: [Ecto.UUID.t()]
+  @spec filter_subject_based_on_permissions(Plot.t()) :: [Ecto.UUID.t()]
   def filter_subject_based_on_permissions(plot) do
     Policy
     |> from(as: :policy)
@@ -89,7 +89,7 @@ defmodule DataIntrospection.AccessControl do
   end
 
   @spec filter_query_based_on_permissions(User.t(), String.t()) :: [
-          Ecto.UUID.t() | String.t()
+          Ecto.UUID.t()
         ]
   def filter_query_based_on_permissions(user, permission) do
     Policy

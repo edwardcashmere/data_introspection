@@ -1,10 +1,12 @@
 defmodule DataIntrospectionWeb.UserAuthTest do
+  @moduledoc false
   use DataIntrospectionWeb.ConnCase, async: true
 
-  alias Phoenix.LiveView
+  import DataIntrospection.AccountsFixtures
+
   alias DataIntrospection.Accounts
   alias DataIntrospectionWeb.UserAuth
-  import DataIntrospection.AccountsFixtures
+  alias Phoenix.LiveView
 
   @remember_me_cookie "_data_introspection_web_user_remember_me"
 
