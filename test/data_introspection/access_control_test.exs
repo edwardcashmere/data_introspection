@@ -111,6 +111,10 @@ defmodule DataIntrospection.AccessControlTest do
     end
   end
 
+  describe "filter_subject_based_on_permissions/1" do
+    test "returns a list of subjects based "
+  end
+
   describe "filter_query_based_on_permissions/2" do
     test "returns a list of resources based on user permissions" do
       [%{id: plot_1_id} = plot_1, %{id: plot_2_id} = plot_2] = insert_list(2, :plot)

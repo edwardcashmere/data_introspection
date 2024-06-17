@@ -6,7 +6,17 @@ defmodule DataIntrospection.Accounts do
   import Ecto.Query, warn: false
   alias DataIntrospection.Repo
 
+  alias DataIntrospection.AccessControl
   alias DataIntrospection.Accounts.{User, UserToken, UserNotifier}
+
+  @doc false
+  @spec list_users(User.t()) :: [User.t()]
+  def list_users(user) do
+    User
+    |> from(as: :users)
+    |> where([u], u.id != ^user.id)
+    |> Repo.all()
+  end
 
   ## Database getters
 
@@ -326,6 +336,21 @@ defmodule DataIntrospection.Accounts do
     else
       _ -> nil
     end
+  end
+
+  def get_all_plot_collaborators(plot, current_user) do
+    user_ids =
+      plot
+      |> AccessControl.filter_subject_based_on_permissions()
+      |> Enum.reject(&(&1 == current_user.id))
+
+    IO.inspect(user_ids, label: "user_ids")
+
+    User
+    |> from(as: :users)
+    |> where([u], u.id in ^user_ids)
+    |> select([u], u.email)
+    |> Repo.all()
   end
 
   @doc """

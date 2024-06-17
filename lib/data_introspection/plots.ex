@@ -5,6 +5,7 @@ defmodule DataIntrospection.Plots do
 
   import Ecto.Query, warn: false
 
+  alias DataIntrospection.AccessControl
   alias DataIntrospection.Plots.Plot
   alias DataIntrospection.Repo
 
@@ -39,9 +40,14 @@ defmodule DataIntrospection.Plots do
   @doc """
     list all plots for a  user
   """
-  @spec list_user_plots(DataIntrospection.Accounts.User.t()) :: [Plot.t()]
-  def list_user_plots(_user) do
-    Repo.all(Plot)
+  @spec list_user_plots(DataIntrospection.Accounts.User.t(), String.t()) :: [Plot.t()]
+  def list_user_plots(user, permission) do
+    resource_list = AccessControl.filter_query_based_on_permissions(user, permission)
+
+    Plot
+    |> from(as: :plots)
+    |> where([p], p.id in ^resource_list)
+    |> Repo.all()
   end
 
   @doc """

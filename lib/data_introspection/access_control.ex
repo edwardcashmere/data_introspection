@@ -79,6 +79,15 @@ defmodule DataIntrospection.AccessControl do
     |> Enum.any?()
   end
 
+  @spec filter_subject_based_on_permissions(Ecto.UUID.t()) :: [Ecto.UUID.t()]
+  def filter_subject_based_on_permissions(plot) do
+    Policy
+    |> from(as: :policy)
+    |> where([policy: policy], policy.resource == ^Resource.code(plot))
+    |> select([p], fragment("split_part(?, '.', 2)", p.subject))
+    |> Repo.all()
+  end
+
   @spec filter_query_based_on_permissions(User.t(), String.t()) :: [
           Ecto.UUID.t() | String.t()
         ]

@@ -11,9 +11,48 @@
   <section id="plots" phx-hook="plotJS">
     <div :for={plot <- @plots} class="border border-zinc-500 p-3 rounded-md space-y-2 my-2 w-3/4">
       <h3 class="font-semibold"><%= plot.title %></h3>
-      <p><%= plot.dataset %></p>
+      <div class="flex  justify-between">
+        <p><%= plot.dataset %></p>
+        <.button
+          :if={AccessControl.check?(@current_user, plot, "edit")}
+          phx-click={JS.navigate(~p"/plots/edit/#{plot}")}
+        >
+          Edit
+        </.button>
+        <.button phx-click={JS.navigate(~p"/plots/share/#{plot}")}>Share</.button>
+      </div>
       <p><%= plot.expression %></p>
+      <div class="flex space-x-2">
+        <p>Shared with:</p>
+        <ul class="flex space-x-2">
+          <li :for={user <- Accounts.get_all_plot_collaborators(plot, @current_user)}>
+            <%= user %>,
+          </li>
+        </ul>
+      </div>
       <div id={plot.id}></div>
     </div>
   </section>
 </section>
+
+<.modal
+  :if={@live_action == :share}
+  id="share"
+  show
+  on_cancel={JS.navigate(~p"/plots/private/{@current_user}")}
+>
+  <.simple_form id="share-plot" for={@form} as="user" class="flex" phx-submit="share">
+    <div class="w-full">
+      <h1 class="text-2xl"><%= @page_title %></h1>
+      <.live_select
+        placeholder="search"
+        field={@form[:id]}
+        options={@options}
+        allow_clear={true}
+        dropdown_class="bg-white mt-2 max-h-64 overflow-y-scroll"
+        active_option_class="text-white bg-gray-600"
+      />
+    </div>
+    <.button type="submit">share</.button>
+  </.simple_form>
+</.modal>

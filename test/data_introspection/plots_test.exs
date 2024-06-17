@@ -46,15 +46,21 @@ defmodule DataIntrospection.PlotsTest do
   describe "list_user_plots/1" do
     test "should list all plots for a user" do
       user = insert(:user)
-      insert_list(5, :plot)
+      plots = insert_list(5, :plot)
 
-      assert [%Plot{} | _] = plots = Plots.list_user_plots(user)
-      assert length(plots) == 5
+      plots
+      |> Enum.take(3)
+      |> Enum.each(fn plot ->
+        insert(:policy, subject: user, resource: plot, action: "edit")
+      end)
+
+      assert [%Plot{} | _] = plots = Plots.list_user_plots(user, "edit")
+      assert length(plots) == 3
     end
 
     test "should return an empty list if user has no plots" do
       user = insert(:user)
-      assert [] = Plots.list_user_plots(user)
+      assert [] = Plots.list_user_plots(user, "view")
     end
   end
 

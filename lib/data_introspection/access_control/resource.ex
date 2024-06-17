@@ -39,11 +39,11 @@ defimpl Resource, for: DataIntrospection.Accounts.User do
 end
 
 defimpl Resource, for: DataIntrospection.Plots.Plot do
-  def prefix(_team), do: "plot."
-  def code(team), do: prefix(team) <> team.id
+  def prefix(_plot), do: "plot."
+  def code(plot), do: prefix(plot) <> plot.id
 
-  def collect_resources(team) do
-    [team, "plot.*", "*"]
+  def collect_resources(plot) do
+    [plot, "plot.*", "*"]
   end
 end
 

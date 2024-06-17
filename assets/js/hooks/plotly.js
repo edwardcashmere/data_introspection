@@ -21,6 +21,7 @@ export const plotJS = {
 
     this.handleEvent('render-plots', function ({ datasets: payload }) {
       payload.forEach((data, _index) => {
+          console.log(payload, 'payload');
           context_div = document.getElementById(data.id);
           context_div.setAttribute('data-role', 'plots');
 

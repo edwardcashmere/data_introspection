@@ -9,7 +9,7 @@ defmodule DataIntrospectionWeb.Nav do
   @spec side_nav(assigns :: map()) :: Phoenix.LiveView.Rendered.t()
   def side_nav(assigns) do
     ~H"""
-    <aside class="flex flex-col h-screen bg-slate-300 w-64 shadow shadow-lg rounded-sm">
+    <aside class="flex z-20 flex-col h-screen bg-slate-300 w-64 shadow shadow-lg rounded-sm">
       <img
         src="https://assets-global.website-files.com/63ea11d4e90f21674a93fc5f/63ea378760030855f7bacafa_Logo-p-800.png"
         alt="logo"

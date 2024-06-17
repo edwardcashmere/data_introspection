@@ -27,7 +27,9 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
     index =
       headers
       |> Enum.map(fn value_string -> value_string |> String.trim() |> String.downcase() end)
-      |> Enum.find_index(fn string_term -> string_term == expression end)
+      |> Enum.find_index(fn string_term ->
+        string_term == expression |> String.trim() |> String.downcase()
+      end)
 
     Enum.map(data, fn row -> Enum.at(row, index) end)
   end
@@ -78,6 +80,9 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
           {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
         end)
         |> sanitize_data_and_perform_operation("-")
+
+      {_, _, _, _} ->
+        nil
     end
   end
 

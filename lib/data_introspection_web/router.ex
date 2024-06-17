@@ -96,15 +96,26 @@ defmodule DataIntrospectionWeb.Router do
   scope "/plots", DataIntrospectionWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live_session :check_plots_ownership,
+    live_session :plots,
       on_mount: [
         {DataIntrospectionWeb.UserAuth, :ensure_authenticated},
         DataIntrospectionWeb.Hook.Nav
       ] do
-      live "/private/:id", PlotsLive.Index, :self
       live "/shared/:id", PlotsLive.Index, :shared
       live "/new", PlotsLive.NewPlot, :new
+      live "/private/:id", PlotsLive.Index, :self
+
+      # live "/public/:id", PlotsLive.Index, :shared
+    end
+
+    live_session :check_plots_ownership,
+      on_mount: [
+        {DataIntrospectionWeb.UserAuth, :ensure_authenticated},
+        {DataIntrospectionWeb.Hook.CheckPermission, :check_owner},
+        DataIntrospectionWeb.Hook.Nav
+      ] do
       live "/edit/:id", PlotsLive.NewPlot, :edit
+      live "/share/:id", PlotsLive.Index, :share
 
       # live "/public/:id", PlotsLive.Index, :shared
     end

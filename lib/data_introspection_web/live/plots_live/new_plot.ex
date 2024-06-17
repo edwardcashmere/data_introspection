@@ -5,6 +5,7 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
   import DataIntrospectionWeb.PlotsLive.Helper
   import LiveSelect
 
+  alias DataIntrospection.AccessControl
   alias DataIntrospection.Plots
   alias DataIntrospection.Plots.Plot
   # alias NimbleCSV.RFC4180, as: CSV
@@ -72,10 +73,11 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
     {:noreply, push_event(socket, "render-plot", %{dataset: data})}
   end
 
-  defp maybe_push_event(_socket, changeset, plots_params) do
+  defp maybe_push_event(socket, changeset, plots_params) do
     case validate_expression(changeset, plots_params) do
       {changeset, data} ->
         if changeset.valid? do
+          maybe_broadcast_changes(socket.assigns, data)
           send(self(), {:render_plot, data})
         end
 
@@ -86,6 +88,17 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
         changeset
     end
   end
+
+  defp maybe_broadcast_changes(%{plot: %Plot{id: plot_id}}, data) when is_binary(plot_id) do
+    Phoenix.PubSub.broadcast_from(
+      DataIntrospection.PubSub,
+      self(),
+      "plot:#{plot_id}",
+      {:update_plot, {plot_id, data}}
+    )
+  end
+
+  defp maybe_broadcast_changes(_, _data), do: :ok
 
   defp validate_expression(changeset, %{"expression" => ""}), do: changeset
 
@@ -256,12 +269,17 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
   end
 
   defp save_plot(socket, :new, plot_params) do
-    case Plots.create_plot(plot_params) do
-      {:ok, _plot} ->
-        socket
-        |> put_flash(:info, "Plot created successfully.")
-        |> push_navigate(to: ~p"/plots/private/#{socket.assigns.current_user}")
-
+    with {:ok, plot} <- Plots.create_plot(plot_params),
+         {:ok, _policy} <-
+           AccessControl.create_policy(
+             socket.assigns.current_user,
+             plot,
+             "*"
+           ) do
+      socket
+      |> put_flash(:info, "Plot created successfully.")
+      |> push_navigate(to: ~p"/plots/private/#{socket.assigns.current_user}")
+    else
       {:error, changeset} ->
         socket
         |> assign(form: to_form(changeset))
