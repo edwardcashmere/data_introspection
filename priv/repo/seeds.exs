@@ -9,3 +9,6 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+import DataIntrospectionWeb.Factory
+
+insert_list(10, :user)
