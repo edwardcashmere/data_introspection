@@ -1,8 +1,8 @@
 <main class="box-border">
-  <div class="w-full h-screen">
+  <div class="flex w-full h-screen">
     <.flash_group flash={@flash} />
     <.side_nav :if={@current_user} current_user={@current_user} tab={@tab} />
-    <div class="flex">
+    <div class="flex w-full overflow-y-scroll">
       <%= @inner_content %>
     </div>
   </div>

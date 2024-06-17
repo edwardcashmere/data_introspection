@@ -1,3 +1,21 @@
-<section>
-  <h1>My plots</h1>
+<section class="my-8 mx-4 p-2 w-full">
+  <div class="flex flex-col w-full">
+    <h1 class="mb-4 text-5xl"><%= @page_title %></h1>
+    <div :if={@live_action == :self} class="flex justify-end w-full">
+      <.button phx-click={JS.navigate(~p"/plots/new")} data-role="create-new-plot">
+        Create New Plot
+      </.button>
+    </div>
+  </div>
+
+  <section id="plots" phx-hook="plotJS">
+    <div :for={plot <- @plots} class="border border-zinc-500 p-3 rounded-md space-y-2 my-2 w-3/4">
+      <h3 class="font-semibold"><%= plot.title %></h3>
+      <p><%= plot.dataset %></p>
+      <p><%= plot.expression %></p>
+      <div id={plot.id}>
+
+      </div>
+    </div>
+  </section>
 </section>

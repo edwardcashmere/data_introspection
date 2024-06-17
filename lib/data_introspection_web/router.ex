@@ -103,6 +103,9 @@ defmodule DataIntrospectionWeb.Router do
       ] do
       live "/private/:id", PlotsLive.Index, :self
       live "/shared/:id", PlotsLive.Index, :shared
+      live "/new", PlotsLive.NewPlot, :new
+      live "/edit/:id", PlotsLive.NewPlot, :edit
+
       # live "/public/:id", PlotsLive.Index, :shared
     end
   end

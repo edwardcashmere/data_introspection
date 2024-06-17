@@ -1,9 +1,9 @@
 // See the Tailwind configuration guide for advanced usage
 // https://tailwindcss.com/docs/configuration
 
-const plugin = require("tailwindcss/plugin")
-const fs = require("fs")
-const path = require("path")
+const plugin = require("tailwindcss/plugin");
+const fs = require("fs");
+const path = require("path");
 // #d580ff purple
 // #db7f8f pink
 
@@ -17,6 +17,7 @@ module.exports = {
     extend: {
       colors: {
         brand: '#d580ff',
+        brand_pink: '#db7f8f',
       },
     },
   },
