@@ -110,4 +110,16 @@ defmodule DataIntrospection.AccessControlTest do
       refute AccessControl.check?(user, plot_1, "edit")
     end
   end
+
+  describe "filter_query_based_on_permissions/2" do
+    test "returns a list of resources based on user permissions" do
+      [%{id: plot_1_id} = plot_1, %{id: plot_2_id} = plot_2] = insert_list(2, :plot)
+      user = insert(:user)
+
+      insert(:policy, subject: user, resource: plot_1, action: "view")
+      insert(:policy, subject: user, resource: plot_2, action: "*")
+      resource_ids = AccessControl.filter_query_based_on_permissions(user, "view")
+      assert Enum.all?(resource_ids, &(&1 in [plot_1_id, plot_2_id]))
+    end
+  end
 end

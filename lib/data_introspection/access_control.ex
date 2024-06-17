@@ -79,6 +79,18 @@ defmodule DataIntrospection.AccessControl do
     |> Enum.any?()
   end
 
+  @spec filter_query_based_on_permissions(User.t(), String.t()) :: [
+          Ecto.UUID.t() | String.t()
+        ]
+  def filter_query_based_on_permissions(user, permission) do
+    Policy
+    |> from(as: :policy)
+    |> where([policy: policy], policy.subject == ^Subject.code(user))
+    |> where([policy: policy], policy.action == ^permission)
+    |> select([p], fragment("split_part(?, '.', 2)", p.resource))
+    |> Repo.all()
+  end
+
   @doc "Generates the query used for search policies"
   @spec search_policies_query(Ecto.Queryable.t(),
           subject: [Subject.t()] | nil,
