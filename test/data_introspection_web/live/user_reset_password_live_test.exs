@@ -93,7 +93,7 @@ defmodule DataIntrospectionWeb.UserResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Log in")|)
+        |> element("[data-role='login-link']")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log_in")
 
@@ -108,7 +108,7 @@ defmodule DataIntrospectionWeb.UserResetPasswordLiveTest do
 
       {:ok, conn} =
         lv
-        |> element(~s|main a:fl-contains("Register")|)
+        |> element("[data-role='register-link']")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/register")
 

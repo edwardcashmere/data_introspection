@@ -219,12 +219,12 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
 
     first_expression_index =
       Enum.find_index(updated_headers, fn string_term ->
-        string_term == String.trim(first_expression)
+        string_term == String.trim(first_expression) |> String.replace(~r/\'/, "")
       end)
 
     second_expression_index =
       Enum.find_index(updated_headers, fn string_term ->
-        string_term == String.trim(second_expression)
+        string_term == String.trim(second_expression) |> String.replace(~r/\'/, "")
       end)
 
     first_row_value = Enum.at(first_row, first_expression_index)
@@ -249,7 +249,9 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
     index =
       headers
       |> Enum.map(fn value_string -> value_string |> String.trim() |> String.downcase() end)
-      |> Enum.find_index(fn string_term -> string_term == expression end)
+      |> Enum.find_index(fn string_term ->
+        string_term == String.replace(expression, ~r/\'/, "")
+      end)
 
     {:ok, index}
   end
@@ -260,12 +262,16 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
       headers |> Enum.map(fn string_term -> string_term |> String.trim() |> String.downcase() end)
 
     expressions
-    |> Enum.map(fn string_term -> string_term |> String.trim() |> String.downcase() end)
+    |> Enum.map(fn string_term ->
+      string_term |> String.trim() |> String.downcase() |> String.replace(~r/\'/, "")
+    end)
     |> Enum.all?(&(&1 in updated_headers))
   end
 
   defp dataset_column_exists?(headers, expression) do
-    headers |> Enum.map(&String.downcase/1) |> Enum.member?(expression)
+    headers
+    |> Enum.map(&String.downcase/1)
+    |> Enum.member?(String.replace(expression, ~r/\'/, ""))
   end
 
   defp save_plot(socket, :new, plot_params) do
