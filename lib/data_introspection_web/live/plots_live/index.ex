@@ -24,7 +24,7 @@ defmodule DataIntrospectionWeb.PlotsLive.Index do
     search_term = String.downcase(text)
 
     options =
-      Enum.filter(socket.assigns.options, fn {email, id} ->
+      Enum.filter(socket.assigns.options, fn {email, _id} ->
         email |> String.downcase() |> String.contains?(search_term)
       end)
 

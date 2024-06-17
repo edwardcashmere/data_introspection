@@ -9,7 +9,11 @@
   </div>
 
   <section id="plots" phx-hook="plotJS">
-    <div :for={plot <- @plots} class="border border-zinc-500 p-3 rounded-md space-y-2 my-2 w-3/4">
+    <div
+      :for={plot <- @plots}
+      class="border border-zinc-500 p-3 rounded-md space-y-2 my-2 w-3/4"
+      data-role={"plot.#{plot.id}"}
+    >
       <h3 class="font-semibold"><%= plot.title %></h3>
       <div class="flex  justify-between">
         <p><%= plot.dataset %></p>

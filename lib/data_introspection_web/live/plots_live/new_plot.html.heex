@@ -8,6 +8,7 @@
       id={"#{to_string(@live_action)}-plot-form"}
       phx-submit="save"
       phx-change="validate"
+      phx-hook="dummy-hook"
     >
       <.input
         field={f[:title]}
