@@ -16,7 +16,7 @@ defmodule DataIntrospectionWeb.PlotsLive.Index do
 
   @impl true
   def handle_info({:render_plots, plots}, socket) do
-    datasets = build_datatsets(plots) 
+    datasets = build_datatsets(plots)
 
     {:noreply, push_event(socket, "render-plots", %{datasets: datasets})}
   end
@@ -33,15 +33,13 @@ defmodule DataIntrospectionWeb.PlotsLive.Index do
     assign(socket, page_title: "Shared Plots", plots: plots)
   end
 
-
   defp apply_action(socket, _live_action, _params), do: socket
 
   defp build_datatsets(plots) do
     Enum.reduce(plots, [], fn plot, acc ->
-  {headers, _first_row, data} = [get_file_path(), plot.dataset] |> Path.join() |> parse_csv()
+      {headers, _first_row, data} = [get_file_path(), plot.dataset] |> Path.join() |> parse_csv()
 
       [%{id: plot.id, dataset: format_dataset(data, headers, plot.expression)} | acc]
     end)
   end
-
 end

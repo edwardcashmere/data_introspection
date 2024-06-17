@@ -37,42 +37,48 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
   def format_dataset(data, headers, expression) do
     updated_expression = expression |> String.trim() |> String.downcase()
 
-      case {String.contains?(updated_expression, "*"), String.contains?(updated_expression, "/"),
-            String.contains?(updated_expression, "+"),
-            String.contains?(updated_expression, "-")} do
-        {true, _, _, _} ->
+    case {String.contains?(updated_expression, "*"), String.contains?(updated_expression, "/"),
+          String.contains?(updated_expression, "+"), String.contains?(updated_expression, "-")} do
+      {true, _, _, _} ->
+        {first_value_index, second_value_index} =
+          get_header_index(headers, String.split(expression, "*"))
 
-          {first_value_index, second_value_index} = get_header_index(headers, String.split(expression, "*"))
-            data
-            |> Enum.map(fn row ->
-            {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
-          end)
-          |> sanitize_data_and_perform_operation("*")
+        data
+        |> Enum.map(fn row ->
+          {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
+        end)
+        |> sanitize_data_and_perform_operation("*")
 
-        {_, true, _, _} ->
-          {first_value_index, second_value_index} = get_header_index(headers, String.split(expression, "/"))
-            data
-            |> Enum.map(fn row ->
-            {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
-          end)
-          |> sanitize_data_and_perform_operation("/")
+      {_, true, _, _} ->
+        {first_value_index, second_value_index} =
+          get_header_index(headers, String.split(expression, "/"))
 
-        {_, _, true, _} ->
-          {first_value_index, second_value_index} = get_header_index(headers, String.split(expression, "+"))
-            data
-            |> Enum.map(fn row ->
-            {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
-          end)
-          |> sanitize_data_and_perform_operation("+")
+        data
+        |> Enum.map(fn row ->
+          {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
+        end)
+        |> sanitize_data_and_perform_operation("/")
 
-        {_, _, _, true} ->
-          {first_value_index, second_value_index} = get_header_index(headers, String.split(expression, "-"))
-            data
-            |> Enum.map(fn row ->
-            {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
-          end)
-          |> sanitize_data_and_perform_operation("-")
-      end
+      {_, _, true, _} ->
+        {first_value_index, second_value_index} =
+          get_header_index(headers, String.split(expression, "+"))
+
+        data
+        |> Enum.map(fn row ->
+          {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
+        end)
+        |> sanitize_data_and_perform_operation("+")
+
+      {_, _, _, true} ->
+        {first_value_index, second_value_index} =
+          get_header_index(headers, String.split(expression, "-"))
+
+        data
+        |> Enum.map(fn row ->
+          {Enum.at(row, first_value_index), Enum.at(row, second_value_index)}
+        end)
+        |> sanitize_data_and_perform_operation("-")
+    end
   end
 
   @spec get_file_path() :: String.t()
@@ -84,22 +90,26 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
     updated_headers =
       Enum.map(headers, fn value_string -> value_string |> String.trim() |> String.downcase() end)
 
-
     first_expression_index =
-      Enum.find_index(updated_headers, fn string_term -> string_term == String.trim(first_expression) end)
+      Enum.find_index(updated_headers, fn string_term ->
+        string_term == String.trim(first_expression)
+      end)
 
     second_expression_index =
-      Enum.find_index(updated_headers, fn string_term -> string_term == String.trim(second_expression) end)
+      Enum.find_index(updated_headers, fn string_term ->
+        string_term == String.trim(second_expression)
+      end)
 
     {first_expression_index, second_expression_index}
   end
 
   @spec sanitize_data_and_perform_operation(list({String.t(), String.t()}), String.t()) ::
-  list()
+          list()
   # credo:disable-for-next-line Credo.Check.Refactor.ABCSize
   def sanitize_data_and_perform_operation(data, operator) do
     data
-    |> Enum.map(fn {left, right} when is_binary(left) and is_binary(right) ->
+    |> Enum.map(fn
+      {left, right} when is_binary(left) and is_binary(right) ->
         case {String.contains?(left, "."), String.contains?(right, ".")} do
           {true, true} ->
             {convert_to_float(left), convert_to_float(right)}
@@ -113,23 +123,24 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
           {false, false} ->
             {convert_to_integer(left), convert_to_integer(right)}
         end
-        {left, right} when is_binary(left) ->
-          case String.contains?(left, ".") do
-            true -> {convert_to_float(left), right}
-            false -> {convert_to_integer(left), right}
-          end
 
-        {left, right} when is_binary(right) ->
-          case String.contains?(right, ".") do
-            true -> {left, convert_to_float(right)}
-            false -> {left, convert_to_integer(right)}
-          end
+      {left, right} when is_binary(left) ->
+        case String.contains?(left, ".") do
+          true -> {convert_to_float(left), right}
+          false -> {convert_to_integer(left), right}
+        end
 
-        {left, right} ->
-          {left, right}
-     end)
+      {left, right} when is_binary(right) ->
+        case String.contains?(right, ".") do
+          true -> {left, convert_to_float(right)}
+          false -> {left, convert_to_integer(right)}
+        end
+
+      {left, right} ->
+        {left, right}
+    end)
     |> Enum.reduce([], fn {left, right}, acc ->
-      [perform_operation({left, right}, operator) |  acc]
+      [perform_operation({left, right}, operator) | acc]
     end)
   end
 
@@ -159,5 +170,4 @@ defmodule DataIntrospectionWeb.PlotsLive.Helper do
   defp perform_operation({left, right}, "*"), do: left * right
   defp perform_operation({left, right}, "+"), do: left + right
   defp perform_operation({left, right}, "-"), do: left - right
-
 end

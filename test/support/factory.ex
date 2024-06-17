@@ -2,6 +2,9 @@ defmodule DataIntrospectionWeb.Factory do
   @moduledoc false
   use ExMachina.Ecto, repo: DataIntrospection.Repo
 
+  alias DataIntrospection.AccessControl.Resource
+  alias DataIntrospection.AccessControl.Subject
+
   @spec user_factory :: DataIntrospection.Accounts.User.t()
   def user_factory do
     %DataIntrospection.Accounts.User{
@@ -16,6 +19,31 @@ defmodule DataIntrospectionWeb.Factory do
       title: sequence(:title, &"Plot-#{&1}"),
       dataset: sequence(:dataset, &"Dataset-#{&1}"),
       expression: sequence(:expression, &"Expression-#{&1}")
+    }
+  end
+
+  @spec policy_factory(map) :: DataIntrospection.AccessControl.Policy.t()
+  def policy_factory(attrs \\ %{}) do
+    subject =
+      if attrs[:subject] do
+        Subject.code(attrs[:subject])
+      else
+        sequence(:policy_subject, &"user.#{&1}")
+      end
+
+    resource =
+      if attrs[:resource] do
+        Resource.code(attrs[:resource])
+      else
+        sequence(:policy_resource, &"plot.#{&1}")
+      end
+
+    action = attrs[:action] || "view"
+
+    %DataIntrospection.AccessControl.Policy{
+      subject: subject,
+      resource: resource,
+      action: action
     }
   end
 

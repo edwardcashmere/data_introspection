@@ -13,7 +13,14 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, dataset: [], plot_name: "", dataset_name: "", plot: %Plot{}, check_errors?: false)}
+    {:ok,
+     assign(socket,
+       dataset: [],
+       plot_name: "",
+       dataset_name: "",
+       plot: %Plot{},
+       check_errors?: false
+     )}
   end
 
   @impl true
@@ -32,15 +39,15 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
       |> Map.put(:action, :validate)
       |> to_form()
 
-
     # validate schema
     # maybe validate expression
     # maybe validate
     socket =
       socket
-        |> assign(:form, form)
-        |> assign(check_errors?: !updated_changeset.valid?)
-      {:noreply, socket}
+      |> assign(:form, form)
+      |> assign(check_errors?: !updated_changeset.valid?)
+
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"plot" => plot_params}, socket) do
@@ -197,12 +204,15 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
     updated_headers =
       Enum.map(headers, fn value_string -> value_string |> String.trim() |> String.downcase() end)
 
-
     first_expression_index =
-      Enum.find_index(updated_headers, fn string_term -> string_term == String.trim(first_expression) end)
+      Enum.find_index(updated_headers, fn string_term ->
+        string_term == String.trim(first_expression)
+      end)
 
     second_expression_index =
-      Enum.find_index(updated_headers, fn string_term -> string_term == String.trim(second_expression) end)
+      Enum.find_index(updated_headers, fn string_term ->
+        string_term == String.trim(second_expression)
+      end)
 
     first_row_value = Enum.at(first_row, first_expression_index)
     second_row_value = Enum.at(first_row, second_expression_index)
@@ -236,7 +246,9 @@ defmodule DataIntrospectionWeb.PlotsLive.NewPlot do
     updated_headers =
       headers |> Enum.map(fn string_term -> string_term |> String.trim() |> String.downcase() end)
 
-    expressions |> Enum.map(fn string_term -> string_term |> String.trim() |> String.downcase() end) |> Enum.all?(&(&1 in updated_headers))
+    expressions
+    |> Enum.map(fn string_term -> string_term |> String.trim() |> String.downcase() end)
+    |> Enum.all?(&(&1 in updated_headers))
   end
 
   defp dataset_column_exists?(headers, expression) do
