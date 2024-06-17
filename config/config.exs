@@ -59,7 +59,7 @@ config :tailwind,
     ),
     cd: Path.expand("../assets", __DIR__)
   ]
-
+config :data_introspection, file_path: "/priv/static/files/"
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

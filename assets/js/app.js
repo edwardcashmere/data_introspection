@@ -19,11 +19,12 @@
 import "phoenix_html";
 // Establish Phoenix Socket and LiveView configuration.
 import { Socket } from "phoenix";
-import { plottJS } from "./hooks/plotly";
+import live_select from 'live_select';
+import { plotJS } from "./hooks/plotly";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
-let hooks = { plottJS: plottJS };
+let hooks = { plotJS, ...live_select };
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");

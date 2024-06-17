@@ -1,1 +1,37 @@
+<section class="my-8 mx-4 p-2 w-full">
+  <section>
+    <.simple_form
+      :let={f}
+      as="plot"
+      for={@form}
+      class={"w-1/2 border rounded-md p-6 space-y-2 " <> if @check_errors?, do: "border-red-500", else: ""}
+      id={"#{to_string(@live_action)}-plot-form"}
+      phx-submit="save"
+      phx-change="validate"
+    >
+      <.input
+        field={f[:title]}
+        label="Plot Name"
+        class="focus:border focus:border-brand_pink focus:shadow focus:shadow-brand_pink "
+      />
+      <.live_select
+        field={@form[:dataset]}
+        allow_clear={true}
+        placeholder="Select dataset"
+        options={@datasets}
+        mode={:single}
+        dropdown_class="bg-white mt-2 h-64 overflow-y-scroll"
+      />
+      <.input
+        field={f[:expression]}
+        label="Expression"
+        class="focus:border focus:border-brand_pink focus:shadow focus:shadow-brand_pink"
+      />
 
+      <.button type="submit" class="" disabled={@check_errors?}>
+        Save
+      </.button>
+    </.simple_form>
+  </section>
+  <section id="plotly-container" phx-hook="plotJS"></section>
+</section>

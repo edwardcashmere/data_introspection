@@ -1,41 +1,41 @@
 import Plotly from "plotly.js-dist-min";
 
-export const plottJS = {
+export const plotJS = {
   mounted() {
     const container = document.getElementById("plotly-container");
 
-    let x = [];
-    for (var i = 0; i < 500; i++) {
-      x[i] = Math.random();
-    }
+    this.handleEvent('render-plot', function ({ dataset: payload }) {
+      console.log(payload, 'payload shhdfjjfsms');
+      context_div = document.createElement('div');
+      context_div.setAttribute("id", "new-plot");
 
-    let y = [];
-    for (var i = 0; i < 500; i++) {
-      y[i] = Math.random();
-    }
+      let trace = {
+        x: payload,
+        type: 'histogram',
+      };
+      let data = [trace];
 
-    let trace = {
-      x: x,
-      type: "histogram",
-    };
+      Plotly.newPlot(context_div, data);
+      container.appendChild(context_div);
+    });
 
-    let trace_y = {
-      x: y,
-      type: "histogram",
-    };
+    this.handleEvent('render-plots', function ({ datasets: payload }) {
+      payload.forEach((data, _index) => {
+          context_div = document.getElementById(data.id);
+          context_div.setAttribute('data-role', 'plots');
 
-    let data_x = [trace];
-    let data_y = [trace_y];
+          let trace = {
+            x: data.dataset,
+            type: 'histogram',
+          };
+          let traceData = [trace];
 
-    x_context = document.createElement("div");
-    y_context = document.createElement("div");
+          Plotly.newPlot(context_div, traceData);
 
-    x_plot = Plotly.newPlot(x_context, data_x);
-    y_plot = Plotly.newPlot(y_context, data_y);
+      })
+      
+    });
 
-    container.appendChild(x_context);
-    container.appendChild(y_context);
-
-    console.log("Plotly.js mounted");
   },
+
 };

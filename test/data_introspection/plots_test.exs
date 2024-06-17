@@ -46,7 +46,7 @@ defmodule DataIntrospection.PlotsTest do
   describe "list_user_plots/1" do
     test "should list all plots for a user" do
       user = insert(:user)
-      plots = insert_list(5, :plot)
+      insert_list(5, :plot)
 
       assert [%Plot{} | _] = plots = Plots.list_user_plots(user)
       assert length(plots) == 5
@@ -62,6 +62,12 @@ defmodule DataIntrospection.PlotsTest do
     test "should delete a plot" do
       plot = insert(:plot)
       assert {:ok, %Plot{}} = Plots.delete(plot)
+    end
+  end
+
+  describe "change_plot/2" do
+    test "should return a changeset for a plot" do
+      assert %Ecto.Changeset{} = Plots.change_plot(%Plot{}, %{title: "New Title"})
     end
   end
 

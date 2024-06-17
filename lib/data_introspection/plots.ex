@@ -29,6 +29,14 @@ defmodule DataIntrospection.Plots do
   end
 
   @doc """
+    returns changeset for plots
+  """
+  @spec change_plot(Plot.t(), map()) :: Ecto.Changeset.t()
+  def change_plot(plot, attrs) do
+    Plot.changeset(plot, attrs)
+  end
+
+  @doc """
     list all plots for a  user
   """
   @spec list_user_plots(DataIntrospection.Accounts.User.t()) :: [Plot.t()]
